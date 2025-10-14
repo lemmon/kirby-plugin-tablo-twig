@@ -1,0 +1,5 @@
+- [ ] Normalize paths in `src/TwigTemplate.php` when collecting template/snippet directories so Windows-style separators don’t break Twig loader discovery (`findDirs()` and plugin loop). Confirm whether Kirby itself assumes forward slashes to avoid introducing incompatible behavior.
+- [ ] Guard against `null` from `file()` before calling `substr()` in `src/TwigTemplate.php` to avoid warnings when Kirby can’t resolve a template.
+- [ ] Expose Twig environment options via Kirby config (cache path override, debug toggle, strict variables) so Tablo themes can fine-tune rendering behavior.
+- [ ] Allow per-plugin template namespace configuration rather than relying on hardcoded `templates`/`snippets` aliases.
+- [ ] Make the Twig cache directory name configurable via Kirby options.
