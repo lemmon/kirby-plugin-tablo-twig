@@ -4,12 +4,12 @@ Internal Kirby plugin that swaps Kirby’s template component to render Twig fil
 
 ## Install Notes
 ```sh
+# 1. Add the plugin as a submodule
 git submodule add https://github.com/lemmon/kirby-plugin-tablo-twig site/plugins/tablo-twig
-# or
-git submodule add git@github.com:lemmon/kirby-plugin-tablo-twig.git site/plugins/tablo-twig
 
+# 2. Install Twig runtime for template rendering
 composer require twig/twig
 
-# optional: Kirby CLI if not already installed globally
+# 3. Optional: install Kirby CLI helpers
 composer require getkirby/cli
 ```
