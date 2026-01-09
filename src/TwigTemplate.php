@@ -12,7 +12,8 @@ class TwigTemplate extends Template
     private static $kirby;
     private static $twig;
 
-    public function __construct(App $kirby, string $name, string $type = 'html', string $defaultType = 'html')    {
+    public function __construct(App $kirby, string $name, string $type = 'html', string $defaultType = 'html')
+    {
         parent::__construct($name, $type, $defaultType);
         self::$kirby ??= $kirby;
     }
@@ -34,15 +35,23 @@ class TwigTemplate extends Template
             }
 
             // add plugin templates dirs
-            foreach ($this->findDirs('templates') as $dir) if (is_dir($dir)) {
-                $loader->addPath($dir);
-                $loader->addPath($dir, 'templates');
-                $loader->addPath(substr($dir, 0, -10) . '/snippets', 'snippets');
+            foreach ($this->findDirs('templates') as $dir) {
+                if (is_dir($dir)) {
+                    $loader->addPath($dir);
+                    $loader->addPath($dir, 'templates');
+                    // Add corresponding snippets directory if it exists
+                    $snippetsDir = dirname($dir) . '/snippets';
+                    if (is_dir($snippetsDir)) {
+                        $loader->addPath($snippetsDir, 'snippets');
+                    }
+                }
             }
 
             // add plugin snippets dir
-            foreach ($this->findDirs('snippets') as $dir) if (is_dir($dir)) {
-                $loader->addPath($dir, 'snippets');
+            foreach ($this->findDirs('snippets') as $dir) {
+                if (is_dir($dir)) {
+                    $loader->addPath($dir, 'snippets');
+                }
             }
 
             self::$twig = new Twig\Environment($loader, [
@@ -110,11 +119,14 @@ class TwigTemplate extends Template
 
     public function render(array $data = []): string
     {
-        // render php
-        if (substr($this->file(), -4) === '.php') {
+        $file = $this->file();
+
+        // render php if file is PHP template
+        if ($file !== null && substr($file, -4) === '.php') {
             return parent::render($data);
         }
+
         // render twig
-        return $this->getTwig()->render(sprintf('%s.twig', $this->name), $data);
+        return $this->getTwig()->render(sprintf('%s.twig', $this->name()), $data);
     }
 }

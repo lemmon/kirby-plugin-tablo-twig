@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Tablo Twig Template Plugin for Kirby CMS
+ *
+ * Swaps Kirby's template component to render Twig files alongside PHP templates.
+ * See README.md for installation and usage details.
+ *
+ * @link https://tablo.supply/ Tablo themes marketplace
+ * @see README.md
+ */
+
 require __DIR__ . '/src/TwigTemplate.php';
 
 Kirby::plugin('tablo/twig', [
@@ -14,7 +24,7 @@ Kirby::plugin('tablo/twig', [
                     return;
                 }
                 $cli->out('Clearing Twig cache at ' . $cacheDir);
-                if (Dir::remove($cacheDir)) {
+                if (\Kirby\Filesystem\Dir::remove($cacheDir)) {
                     $cli->success('Twig cache flushed');
                 } else {
                     $cli->error('Failed to flush Twig cache');
