@@ -13,6 +13,14 @@
 require __DIR__ . '/src/TwigTemplate.php';
 
 Kirby::plugin('tablo/twig', [
+    'options' => [
+        'jsx' => [
+            // Opt-in; require lemmon/twig-jsx in the site Composer root.
+            'enabled' => false,
+            // null: do not override twig-jsx lexer defaults (see site/config for per-site options).
+            'lexer' => null,
+        ],
+    ],
     'commands' => [
         'twig:flush' => [
             'description' => 'Flush Twig cache',

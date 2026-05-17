@@ -29,9 +29,12 @@ class TwigTemplate extends Template
                 $loader->addPath($dir, 'templates');
             }
 
-            // add default snippets dir, if exists
+            // add default snippets dir, if exists (@snippets/... and unqualified paths)
             if (is_dir($dir = self::$kirby->root('snippets'))) {
                 $loader->addPath($dir, 'snippets');
+                // Default namespace so twig-jsx includes like `components/Foo.twig` resolve to
+                // site/snippets/components/ (Kirby snippets, not page templates).
+                $loader->addPath($dir);
             }
 
             // add plugin templates dirs
@@ -73,6 +76,8 @@ class TwigTemplate extends Template
             self::$twig->addGlobal('page', self::$kirby->site()->page());
             self::$twig->addGlobal('user', self::$kirby->user());
             self::$twig->addGlobal('users', self::$kirby->users());
+
+            $this->registerTwigJsx(self::$twig);
         }
 
         return self::$twig;
@@ -86,6 +91,37 @@ class TwigTemplate extends Template
         $paths = array_unique($paths);
         $paths = array_values($paths);
         return $paths;
+    }
+
+    /**
+     * Optional JSX-like component tags via lemmon/twig-jsx (composer package installed by the site).
+     *
+     * @see https://github.com/lemmon/twig-jsx
+     */
+    private function registerTwigJsx(Twig\Environment $twig): void
+    {
+        if (!option('tablo.twig.jsx.enabled', false)) {
+            return;
+        }
+
+        if (
+            !class_exists(\Lemmon\TwigJsx\AttributeExtension::class)
+            || !class_exists(\Lemmon\TwigJsx\JSXPreLexer::class)
+        ) {
+            throw new \LogicException(
+                'tablo.twig.jsx.enabled is true, but lemmon/twig-jsx is not autoloaded. '
+                . 'Require it in your project Composer root (see site/plugins/tablo-twig/README.md).'
+            );
+        }
+
+        $lexer = option('tablo.twig.jsx.lexer');
+        if (!is_array($lexer)) {
+            $lexer = [];
+        }
+        $lexer = array_filter($lexer, static fn ($value) => $value !== null);
+
+        $twig->addExtension(new \Lemmon\TwigJsx\AttributeExtension());
+        $twig->setLexer(new \Lemmon\TwigJsx\JSXPreLexer($twig, $lexer));
     }
 
     public function extension(): string
