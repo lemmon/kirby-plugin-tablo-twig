@@ -12,6 +12,23 @@
 
 require __DIR__ . '/src/TwigTemplate.php';
 
+if (!function_exists('twig')) {
+    /**
+     * Render a Twig string from PHP. Supports JSX component syntax when
+     * tablo.twig.jsx.enabled is true.
+     *
+     * Usage:
+     *   echo twig('<Button variant="primary" href="{{ url }}">{{ label }}</Button>', [
+     *       'url'   => $url,
+     *       'label' => 'Subscribe',
+     *   ]);
+     */
+    function twig(string $source, array $data = []): string
+    {
+        return \Tablo\TwigTemplate::env()->createTemplate($source)->render($data);
+    }
+}
+
 Kirby::plugin('tablo/twig', [
     'options' => [
         'jsx' => [

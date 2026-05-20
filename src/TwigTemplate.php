@@ -18,72 +18,84 @@ class TwigTemplate extends Template
         self::$kirby ??= $kirby;
     }
 
-    private function getTwig()
+    private static function initTwig(): void
     {
-        if (!isset(self::$twig)) {
-            $loader = new Twig\Loader\FilesystemLoader([]);
-
-            // add default templates dir, if exists
-            if (is_dir($dir = self::$kirby->root('templates'))) {
-                $loader->addPath($dir);
-                $loader->addPath($dir, 'templates');
-            }
-
-            // add default snippets dir, if exists (@snippets/... and unqualified paths)
-            if (is_dir($dir = self::$kirby->root('snippets'))) {
-                $loader->addPath($dir, 'snippets');
-                // Default namespace so twig-jsx includes like `components/Foo.twig` resolve to
-                // site/snippets/components/ (Kirby snippets, not page templates).
-                $loader->addPath($dir);
-            }
-
-            // add plugin templates dirs
-            foreach ($this->findDirs('templates') as $dir) {
-                if (is_dir($dir)) {
-                    $loader->addPath($dir);
-                    $loader->addPath($dir, 'templates');
-                    // Add corresponding snippets directory if it exists
-                    $snippetsDir = dirname($dir) . '/snippets';
-                    if (is_dir($snippetsDir)) {
-                        $loader->addPath($snippetsDir, 'snippets');
-                    }
-                }
-            }
-
-            // add plugin snippets dir
-            foreach ($this->findDirs('snippets') as $dir) {
-                if (is_dir($dir)) {
-                    $loader->addPath($dir, 'snippets');
-                }
-            }
-
-            self::$twig = new Twig\Environment($loader, [
-                'cache' => self::$kirby->root('cache') . '/twig',
-                'debug' => option('debug'),
-            ]);
-
-            self::$twig->addFunction(new Twig\TwigFunction('dump', function (...$args) {
-                VarDumper::dump(...$args);
-            }));
-
-            self::$twig->addFunction(new Twig\TwigFunction('*', function ($name, ...$arguments) {
-                return call_user_func_array($name, $arguments);
-            }));
-
-            self::$twig->addGlobal('kirby', self::$kirby);
-            self::$twig->addGlobal('site', self::$kirby->site());
-            self::$twig->addGlobal('pages', self::$kirby->site()->pages());
-            self::$twig->addGlobal('page', self::$kirby->site()->page());
-            self::$twig->addGlobal('user', self::$kirby->user());
-            self::$twig->addGlobal('users', self::$kirby->users());
-
-            $this->registerTwigJsx(self::$twig);
+        if (isset(self::$twig)) {
+            return;
         }
 
+        self::$kirby ??= kirby();
+
+        $loader = new Twig\Loader\FilesystemLoader([]);
+
+        // add default templates dir, if exists
+        if (is_dir($dir = self::$kirby->root('templates'))) {
+            $loader->addPath($dir);
+            $loader->addPath($dir, 'templates');
+        }
+
+        // add default snippets dir, if exists (@snippets/... and unqualified paths)
+        if (is_dir($dir = self::$kirby->root('snippets'))) {
+            $loader->addPath($dir, 'snippets');
+            // Default namespace so twig-jsx includes like `components/Foo.twig` resolve to
+            // site/snippets/components/ (Kirby snippets, not page templates).
+            $loader->addPath($dir);
+        }
+
+        // add plugin templates dirs
+        foreach (self::findDirs('templates') as $dir) {
+            if (is_dir($dir)) {
+                $loader->addPath($dir);
+                $loader->addPath($dir, 'templates');
+                // Add corresponding snippets directory if it exists
+                $snippetsDir = dirname($dir) . '/snippets';
+                if (is_dir($snippetsDir)) {
+                    $loader->addPath($snippetsDir, 'snippets');
+                }
+            }
+        }
+
+        // add plugin snippets dir
+        foreach (self::findDirs('snippets') as $dir) {
+            if (is_dir($dir)) {
+                $loader->addPath($dir, 'snippets');
+            }
+        }
+
+        self::$twig = new Twig\Environment($loader, [
+            'cache' => self::$kirby->root('cache') . '/twig',
+            'debug' => option('debug'),
+        ]);
+
+        self::$twig->addFunction(new Twig\TwigFunction('dump', function (...$args) {
+            VarDumper::dump(...$args);
+        }));
+
+        self::$twig->addFunction(new Twig\TwigFunction('*', function ($name, ...$arguments) {
+            return call_user_func_array($name, $arguments);
+        }));
+
+        self::$twig->addGlobal('kirby', self::$kirby);
+        self::$twig->addGlobal('site', self::$kirby->site());
+        self::$twig->addGlobal('pages', self::$kirby->site()->pages());
+        self::$twig->addGlobal('page', self::$kirby->site()->page());
+        self::$twig->addGlobal('user', self::$kirby->user());
+        self::$twig->addGlobal('users', self::$kirby->users());
+
+        self::registerTwigJsx(self::$twig);
+    }
+
+    /**
+     * Returns the shared Twig environment, initializing it on first call.
+     * Useful for rendering Twig templates or JSX component strings from PHP.
+     */
+    public static function env(): Twig\Environment
+    {
+        self::initTwig();
         return self::$twig;
     }
 
-    public function findDirs(string $extension): array
+    public static function findDirs(string $extension): array
     {
         $paths = self::$kirby->extensions($extension);
         $paths = array_filter($paths, fn ($x) => substr($x, -5) === '.twig');
@@ -98,7 +110,7 @@ class TwigTemplate extends Template
      *
      * @see https://github.com/lemmon/twig-jsx
      */
-    private function registerTwigJsx(Twig\Environment $twig): void
+    private static function registerTwigJsx(Twig\Environment $twig): void
     {
         if (!option('tablo.twig.jsx.enabled', false)) {
             return;
@@ -163,6 +175,7 @@ class TwigTemplate extends Template
         }
 
         // render twig
-        return $this->getTwig()->render(sprintf('%s.twig', $this->name()), $data);
+        self::initTwig();
+        return self::$twig->render(sprintf('%s.twig', $this->name()), $data);
     }
 }

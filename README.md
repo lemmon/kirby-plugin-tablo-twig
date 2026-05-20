@@ -32,3 +32,16 @@ return [
 ```
 
 Place component templates under `site/snippets/components/` (for example `Button.twig`). Call-site expressions use JSX-style braces, for example `<Button href={page.url} />`; inside components, every prop arrives in the `props` bag.
+
+## PHP helper: `twig()`
+
+The plugin declares a global `twig()` PHP function for rendering Twig — including JSX component syntax — from PHP snippets:
+
+```php
+echo twig('<Button variant="primary" href={url}>{{ label }}</Button>', [
+    'url'   => $url,
+    'label' => 'Subscribe',
+]);
+```
+
+String props are quoted (`variant="primary"`); variable props use brace expressions (`href={page.url}`).
