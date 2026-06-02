@@ -37,6 +37,7 @@ Kirby::plugin('tablo/twig', [
             // null: do not override twig-jsx lexer defaults (see site/config for per-site options).
             'lexer' => null,
         ],
+        'toolbar' => null,
     ],
     'commands' => [
         'twig:flush' => [
@@ -61,5 +62,8 @@ Kirby::plugin('tablo/twig', [
         'template' => function (Kirby $kirby, string $name, string $type = 'html', string $defaultType = 'html') {
             return new Tablo\TwigTemplate($kirby, $name, $type, $defaultType);
         },
+    ],
+    'snippets' => [
+        'toolbar' => __DIR__ . '/snippets/toolbar.twig',
     ],
 ]);

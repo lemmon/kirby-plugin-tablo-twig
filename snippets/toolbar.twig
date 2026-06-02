@@ -1,0 +1,3 @@
+{% if option('tablo.twig.toolbar') ?? option('debug', false) %}
+  <script defer src="{{ kirby.plugin('tablo/twig').asset('toolbar.js').mediaUrl }}"></script>
+{% endif %}

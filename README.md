@@ -45,3 +45,14 @@ echo twig('<Button variant="primary" href={url}>{{ label }}</Button>', [
 ```
 
 String props are quoted (`variant="primary"`); variable props use brace expressions (`href={page.url}`).
+
+## Debug Toolbar
+Include `{% include '@snippets/toolbar.twig' %}` in the base template. The snippet
+loads `assets/toolbar.js` when `tablo.twig.toolbar` is `true`, or follows the
+global `debug` option when unset. Press `Shift+G` to toggle the toolbar.
+
+Rebuild the asset with an existing project-level esbuild installation:
+
+```sh
+node_modules/.bin/esbuild site/plugins/tablo-twig/src/toolbar.js --bundle --minify --target=es2022,chrome105,firefox104,safari16 --outfile=site/plugins/tablo-twig/assets/toolbar.js
+```
