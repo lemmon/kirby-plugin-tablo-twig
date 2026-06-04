@@ -1,3 +1,13 @@
 {% if option('tablo.twig.toolbar') ?? option('debug', false) %}
+  <div
+    id="tablo-toolbar"
+    class="fixed left-2 bottom-2 z-50 hidden rounded-lg bg-black/85 px-3 py-2 text-xs font-bold text-white shadow-lg pointer-events-none"
+    data-tablo-toolbar
+    data-turbo-permanent
+    aria-hidden="true"
+    title="Debug toolbar - Shift+G to toggle"
+  >
+    <div class="flex items-center gap-2"><span class="text-white/60">BP</span><span><span class="sm:hidden">XS</span><span class="hidden sm:inline md:hidden">SM</span><span class="hidden md:inline lg:hidden">MD</span><span class="hidden lg:inline xl:hidden">LG</span><span class="hidden xl:inline 2xl:hidden">XL</span><span class="hidden 2xl:inline">2XL</span></span><span class="h-3 w-px bg-white/20"></span><span class="text-white/60">VW</span><span data-tablo-toolbar-viewport>0 × 0</span></div>
+  </div>
   <script defer src="{{ kirby.plugin('tablo/twig').asset('toolbar.js').mediaUrl }}"></script>
 {% endif %}

@@ -47,9 +47,14 @@ echo twig('<Button variant="primary" href={url}>{{ label }}</Button>', [
 String props are quoted (`variant="primary"`); variable props use brace expressions (`href={page.url}`).
 
 ## Debug Toolbar
-Include `{% include '@snippets/toolbar.twig' %}` in the base template. The snippet
-loads `assets/toolbar.js` when `tablo.twig.toolbar` is `true`, or follows the
-global `debug` option when unset. Press `Shift+G` to toggle the toolbar.
+
+Include `{% include '@snippets/toolbar.twig' %}` in the base template as the
+last element in `<body>`, right before `</body>`. When enabled, the snippet
+renders the toolbar markup, marks it as `data-turbo-permanent`, and loads
+`assets/toolbar.js` for viewport updates and `Shift+G` toggling.
+
+The toolbar is enabled when `tablo.twig.toolbar` is `true`, or follows the
+global `debug` option when unset.
 
 Rebuild the asset with an existing project-level esbuild installation:
 

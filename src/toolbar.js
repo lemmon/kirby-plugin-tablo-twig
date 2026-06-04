@@ -51,24 +51,13 @@ function updateViewport(toolbar) {
   viewport.textContent = `${dimensions.width} × ${dimensions.height}`;
 }
 
-function createToolbar() {
-  const toolbar = document.createElement("div");
-  toolbar.className =
-    "fixed left-2 bottom-2 z-50 hidden rounded-lg bg-black/85 px-3 py-2 text-xs font-bold text-white shadow-lg pointer-events-none";
-  toolbar.setAttribute("data-tablo-toolbar", "");
-  toolbar.setAttribute("aria-hidden", "true");
-  toolbar.title = "Debug toolbar - Shift+G to toggle";
-  toolbar.innerHTML = `<div class="flex items-center gap-2"><span class="text-white/60">BP</span><span><span class="sm:hidden">XS</span><span class="hidden sm:inline md:hidden">SM</span><span class="hidden md:inline lg:hidden">MD</span><span class="hidden lg:inline xl:hidden">LG</span><span class="hidden xl:inline 2xl:hidden">XL</span><span class="hidden 2xl:inline">2XL</span></span><span class="h-3 w-px bg-white/20"></span><span class="text-white/60">VW</span><span data-tablo-toolbar-viewport>0 × 0</span></div>`;
-  return toolbar;
-}
-
 function initializeToolbar() {
-  if (document.querySelector(TOOLBAR_SELECTOR)) {
+  const toolbar = document.querySelector(TOOLBAR_SELECTOR);
+
+  if (!toolbar) {
     return;
   }
 
-  const toolbar = createToolbar();
-  document.body.appendChild(toolbar);
   setToolbarVisibility(toolbar, getStoredVisibility());
   updateViewport(toolbar);
 
