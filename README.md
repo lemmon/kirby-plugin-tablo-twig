@@ -31,7 +31,7 @@ return [
 ];
 ```
 
-Place component templates under `site/snippets/components/` (for example `Button.twig`). Call-site expressions use JSX-style braces, for example `<Button href={page.url} />`; inside components, every prop arrives in the `props` bag.
+Place component templates under `site/snippets/components/` (for example `Button.twig`). Call-site expressions use JSX-style braces, for example `<Button href={page.url} />`; inside components, every prop arrives in the `props` bag. Spread remaining HTML attributes with `{{ props|spread }}` (or `{{ props.except('class')|spread }}`). Quoted prop values are static strings; dynamic values use the expression form (`href={url}`), not interpolation inside quotes.
 
 ## PHP helper: `twig()`
 

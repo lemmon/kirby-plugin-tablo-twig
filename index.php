@@ -18,7 +18,7 @@ if (!function_exists('twig')) {
      * tablo.twig.jsx.enabled is true.
      *
      * Usage:
-     *   echo twig('<Button variant="primary" href="{{ url }}">{{ label }}</Button>', [
+     *   echo twig('<Button variant="primary" href={url}>{{ label }}</Button>', [
      *       'url'   => $url,
      *       'label' => 'Subscribe',
      *   ]);
