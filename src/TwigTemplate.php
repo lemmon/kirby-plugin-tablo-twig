@@ -5,7 +5,6 @@ namespace Tablo;
 use Kirby\Cms\App;
 use Kirby\Cms\Template;
 use Twig;
-use Symfony\Component\VarDumper\VarDumper;
 
 class TwigTemplate extends Template
 {
@@ -66,10 +65,6 @@ class TwigTemplate extends Template
             'cache' => self::$kirby->root('cache') . '/twig',
             'debug' => option('debug'),
         ]);
-
-        self::$twig->addFunction(new Twig\TwigFunction('dump', function (...$args) {
-            VarDumper::dump(...$args);
-        }));
 
         self::$twig->addFunction(new Twig\TwigFunction('*', function ($name, ...$arguments) {
             return call_user_func_array($name, $arguments);

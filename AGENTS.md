@@ -16,7 +16,7 @@ Automated tests are not yet defined. When contributing, validate behavior by loa
 The repository has no public Git history yet; adopt Conventional Commit headers (for example, `feat: add snippet loader alias`). Group related changes into a single commit and detail any Kirby/Twig impacts in the body. Pull requests should describe the motivation, summarize testing (commands run or pages inspected), and include before/after screenshots when UI output changes. Link to related Kirby issues or discussions to provide context for reviewers.
 
 ## Cache & Configuration Tips
-Twig cache paths are derived from `kirby()->root('cache')`. When troubleshooting, inspect `storage/cache/twig` and ensure the directory is writable. Enable Kirby’s debug mode (`'debug' => true` in `config.php`) to surface Twig errors and leverage the registered `dump()` Twig function for scoped inspection within templates.
+Twig cache paths are derived from `kirby()->root('cache')`. When troubleshooting, inspect `storage/cache/twig` and ensure the directory is writable. Enable Kirby’s debug mode (`'debug' => true` in `config.php`) to surface Twig errors.
 
 ## Documentation Hygiene
 Stick to ASCII punctuation in docs (avoid em dashes) so diffs stay predictable. Use emojis sparingly; a bit of personality is fine, but skip emoji-per-list formatting.
