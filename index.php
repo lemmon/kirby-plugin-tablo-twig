@@ -66,4 +66,7 @@ Kirby::plugin('tablo/twig', [
     'snippets' => [
         'toolbar' => __DIR__ . '/snippets/toolbar.twig',
     ],
-]);
+], info: [
+    'authors' => [['name' => 'Jakub Pelák']],
+    'homepage' => 'https://github.com/lemmon/kirby-plugin-tablo-twig',
+], license: 'MIT');
